@@ -1,0 +1,15 @@
+{
+  "name": "polymoar.github.io",
+  "version": "0.0.1",
+  "homepage": "https://github.com/polymoar",
+  "authors": [
+    "Błażej Wolańczyk <blazejwolanczyk@gmail.com>"
+  ],
+  "description": "site for Polymoar github organization",
+  "main": "index.html",
+  "license": "all rights reserved",
+  "private": true,
+  "dependencies": {
+    "d3-line-chart": "Polymoar/d3-line-chart#~0.5.0"
+  }
+}
