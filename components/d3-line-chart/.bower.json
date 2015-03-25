@@ -34,6 +34,5 @@
   },
   "_source": "git://github.com/Polymoar/d3-line-chart.git",
   "_target": "~0.5.0",
-  "_originalSource": "Polymoar/d3-line-chart",
-  "_direct": true
+  "_originalSource": "Polymoar/d3-line-chart"
 }
