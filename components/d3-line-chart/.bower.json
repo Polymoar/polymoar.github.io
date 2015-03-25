@@ -1,6 +1,5 @@
 {
   "name": "d3-line-chart",
-  "version": "0.5.0",
   "homepage": "https://github.com/Polymoar/d3-line-chart",
   "authors": [
     "Junikorn <blazejwolanczyk@gmail.com>"
@@ -8,6 +7,7 @@
   "description": "Polymer component for line charts based on D3.js library",
   "main": "d3-line-chart.html",
   "keywords": [
+    "web-components",
     "polymer",
     "line",
     "chart",
@@ -30,13 +30,13 @@
   "devDependencies": {
     "web-component-tester": "*"
   },
-  "_release": "0.5.0",
+  "_release": "5431c491e9",
   "_resolution": {
-    "type": "version",
-    "tag": "0.5.0",
-    "commit": "58b545cfeaec9e639611d2dedcc4dbebba3f90e3"
+    "type": "branch",
+    "branch": "master",
+    "commit": "5431c491e94afc445bfcefa109efb13de13599b7"
   },
   "_source": "git://github.com/Polymoar/d3-line-chart.git",
-  "_target": "~0.5.0",
+  "_target": "master",
   "_originalSource": "Polymoar/d3-line-chart"
 }
