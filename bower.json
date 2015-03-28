@@ -10,7 +10,7 @@
   "license": "all rights reserved",
   "private": true,
   "dependencies": {
-    "d3-line-chart": "Polymoar/d3-line-chart#master",
+    "d3-line-chart": "Polymoar/d3-line-chart#develop",
     "d3-chart": "Polymoar/d3-chart#master"
   }
 }
