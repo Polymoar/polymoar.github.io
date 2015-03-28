@@ -15,21 +15,21 @@ Responsive and configurable Polymer element for line charts based on D3.js libra
   - d3-chart element with other types configurable for series
 
 #### Example
-    <d3-line-chart metadata="{{ seriesConfiguration }}" data="{{ records }}" flex></d3-line-chart>
+    <d3-chart metadata="{{ seriesConfiguration }}" data="{{ records }}" flex></d3-chart>
 
 #### Styling
   - chart html is ready for styling which shouldn't affect responsiveness
   - please set chart's width & height by css or add it to layout (you can use flex attribute on it)
 
-@element d3-line-chart
-@demo http://polymoar.github.io/components/d3-line-chart/demo.html
-@blurb Responsive and configurable Polymer element for line charts based on D3.js library.
+@element d3-chart
+@demo http://polymoar.github.io/components/d3-chart/demo.html
+@blurb Responsive and configurable Polymer element for charts based on D3.js library.
 @status alpha
-@homepage https://github.com/Polymoar/d3-line-chart
+@homepage https://github.com/Polymoar/d3-chart
 -->
-<polymer-element name="d3-line-chart">
+<polymer-element name="d3-chart">
   <template>
-    <link rel="stylesheet" href="d3-line-chart.css">
+    <link rel="stylesheet" href="d3-chart.css">
     <div id="container" fit layout vertical>
       <template if="{{ name }}">
         <div id="title">{{ name }}</div>

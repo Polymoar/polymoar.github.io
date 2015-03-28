@@ -1,18 +1,20 @@
-d3-line-chart
+d3-chart
 ============
 
-[![Bower version](https://badge.fury.io/bo/d3-line-chart.svg)](http://badge.fury.io/bo/d3-line-chart)
+[![Bower version](https://badge.fury.io/bo/d3-chart.svg)](http://badge.fury.io/bo/d3-chart)
 
-See the [component page](https://polymoar.github.io/components/d3-line-chart) for documentation.
+THIS PROJECT AT IT CURRENT STATE IS A PLACEHOLDER FOR UPCOMING FORK OF D3-LINE-CHART SUPPORTING OTHER TYPES OF CHARTS
 
-See the [demo page](https://polymoar.github.io/components/d3-line-chart/demo.html) for basic usage demo.
+See the [component page](https://polymoar.github.io/components/d3-chart) for documentation.
+
+See the [demo page](https://polymoar.github.io/components/d3-chart/demo.html) for basic usage demo.
 
 ## Install
 
 Install the component using [Bower](http://bower.io/):
 
 ```sh
-$ bower install d3-line-chart --save
+$ bower install d3-chart --save
 ```
 
 ## Browser Compatability
@@ -34,7 +36,7 @@ IE 10+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 
 ## History
 
-For detailed changelog, check [Releases](https://github.com/polymoar/d3-line-chart/releases).
+For detailed changelog, check [Releases](https://github.com/polymoar/d3-chart/releases).
 
 ## License
 
