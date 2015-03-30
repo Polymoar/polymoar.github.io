@@ -31,11 +31,11 @@
   "devDependencies": {
     "web-component-tester": "*"
   },
-  "_release": "d126028503",
+  "_release": "deb6af280f",
   "_resolution": {
     "type": "branch",
     "branch": "develop",
-    "commit": "d1260285036633e733e74d45ec04a2b082b4ad68"
+    "commit": "deb6af280fb1ee2be17f9f2e86ceb91857241456"
   },
   "_source": "git://github.com/Polymoar/d3-line-chart.git",
   "_target": "develop",
