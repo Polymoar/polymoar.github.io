@@ -9,19 +9,18 @@
 Responsive and configurable Polymer element for line charts based on D3.js library.
 
 #### Basic usage example
-    <d3-line-chart data='{{ [[1,2],[2,4],[3,8],[4,16]] }}' flex></d3-line-chart>
+    <d3-line-chart data="{{ [[1,2],[2,4],[3,8],[4,16]] }}"></d3-line-chart>
 
 #### More advanced configuration
 (x time scale with 4 ticks and label, y pow scale with exponent 0.10, responsive to size change)
 
-    <d3-line-chart flex data='{{ [[Date1,1],[Date2,2],[Date3,3]] }}'
-      title='Test chart'
-      axes='{{ [{ name: 'xAxis', scale: 'time', ticks: 4, label: 'Time' },
-        { name: 'yAxis', scale: { type: 'pow', exponent: 0.10 } }] }}'
+    <d3-line-chart data="{{ [[Date1,1],[Date2,2],[Date3,3]] }}"
+      axes="{{ [{ name: 'xAxis', scale: 'time', ticks: 4, label: 'Time' },
+        { name: 'yAxis', scale: { type: 'pow', exponent: 0.10 } }] }}"
       responsive
     ></d3-line-chart>
 
-For more advanced configuration examples please look into demo source.
+For more advanced configuration examples please look into component page and demo source.
 
 #### Styling
   - set chart's width & height by css or add it to layout (you can use flex attribute on it)
@@ -29,7 +28,6 @@ For more advanced configuration examples please look into demo source.
 
 #### Comments
   - after changes inside specific axis or metadata configuration you will need to trigger prepare() for changes to take place
-  - you need to set chart's dimensions (at least min width/height) or put it into layout for it to display
 
 #### Roadmap for next releases
   - save to file
@@ -51,9 +49,6 @@ For more advanced configuration examples please look into demo source.
     <link rel="stylesheet" href="d3-line-chart.css">
     <template if="{{ !factory }}">
       <div id="container" fit layout vertical>
-        <template if="{{ name }}">
-          <div id="title">{{ name }}</div>
-        </template>
         <div flex layout vertical?="{{ vertical }}" horizontal?="{{ !vertical }}">
           <div id="chart" flex>
             <svg id="paper"></svg>
@@ -86,14 +81,6 @@ For more advanced configuration examples please look into demo source.
 
         //published attributes
         publish: {
-          /**
-           * Chart title, if not set the title section is hidden
-           *
-           * @attribute name
-           * @type String
-           * @default null
-           */
-          name: null,
           /**
            * Array containing axes configuration. Each axis configuration is an object as described below:
            * ```
@@ -280,7 +267,7 @@ For more advanced configuration examples please look into demo source.
            * Object with settings for default svg margins override
            * #### Properties:
            *  - `top` - default 10
-           *  - `right` - default 60
+           *  - `right` - default 20 (or 60 if there are 3 axes)
            *  - `bottom` - default 60
            *  - `left` - default 60
            *
@@ -310,7 +297,7 @@ For more advanced configuration examples please look into demo source.
           margin: 'refresh',
           axes: 'refresh',
           grid: 'refresh',
-          data: 'redraw',
+          data: 'checkAndRedraw',
           domain: 'redraw',
           nice: 'redraw'
         },
@@ -319,22 +306,27 @@ For more advanced configuration examples please look into demo source.
         ready: function(){
           var me = this;
           me.uid = me.newUID(); //required because of svg clip paths overlapping
-          me.margin = me.margin || { top: 10, right: 60, bottom: 60, left: 60};
           me.axes = me.axes || [
             { name: 'xAxis' },
             { name: 'yAxis' }
           ];
           me.metadata = me.metadata || [{ axis: 'yAxis' }];
-          me.colors = ['#ff0000', '#ff9900', '#ccff00', '#33ff00', '#00ff66', '#00ffff', '#0066ff', '#3300ff', '#cc00ff', '#ff0099'];
+          me.colors = me.colors || ['#ff0000', '#ff9900', '#ccff00', '#33ff00', '#00ff66', '#00ffff', '#0066ff', '#3300ff', '#cc00ff', '#ff0099'];
         },
         domReady: function(){
           this.prepare();
         },
 
         /**
-         * The `prepare()` method recreates chart with updated configuration attributes & size.
+         * The `prepare([width, height, target])` method recreates chart with updated configuration attributes & size.
+         * You can also use it to create svg node of desired width/height & current configuration by passing width and height.
+         * If you add target parameter created svg will be appended to target node or chart will be written to it (if it is SVG node).
+         * You can also pass target node as a css selector.
          *
          * @method prepare
+         * @param {int} width
+         * @param {int} height
+         * @param {String} target
          * @return {boolean} Returns true if succeeded, otherwise false.
          */
         prepare: function(width, height, target){
@@ -345,6 +337,7 @@ For more advanced configuration examples please look into demo source.
             bounds = me.$.chart.getBoundingClientRect(),
             external = (width && height),
             uid = (external) ? me.newUID() : me.uid,
+            dataPresent = me.data && me.data.length,
             svg;
 
           //select target svg
@@ -369,8 +362,8 @@ For more advanced configuration examples please look into demo source.
 
           //margin secure
           var margin = me.margin || {};
-          margin.top = (isNaN(margin.top)) ? 10 : +margin.top;
-          margin.right = (isNaN(margin.right)) ? 60 : +margin.right;
+          margin.top = (isNaN(margin.top)) ? 20 : +margin.top;
+          margin.right = (!isNaN(margin.right)) ? +margin.right : (me.axes.length < 3) ? 20 : 60;
           margin.bottom = (isNaN(margin.bottom)) ? 60 : +margin.bottom;
           margin.left = (isNaN(margin.left)) ? 60 : +margin.left;
 
@@ -417,26 +410,31 @@ For more advanced configuration examples please look into demo source.
 
           //create focus objects configurations
           var lines = [], line;
-          me.metadata.forEach(function(dataset){
-            dataset.axis = dataset.axis || 'yAxis';
-            var getterX, getterY, axis = me.axes.filter(function(axis){
-                return axis.name === dataset.axis;
-              })[0];
+          if(dataPresent){
+            me.metadata.forEach(function(dataset){
+              dataset.axis = dataset.axis || 'yAxis';
+              var getterX, getterY, axis = me.axes.filter(function(axis){
+                  return axis.name === dataset.axis;
+                })[0];
 
-            if(axis){
-              line = d3.svg.line();
-              line.interpolate(dataset.interpolation || axis.interpolation || me.interpolation || 'linear');
-              getterX = me.getXgetter(dataset);
-              line.x(function(d){
-                return xAxis._scale(getterX(d));
-              });
-              getterY = me.getYgetter(dataset);
-              line.y(function(d){
-                return axis._scale(getterY(d));
-              });
-              lines.push(line);
-            }
-          });
+              if(axis){
+                line = d3.svg.line();
+                line.interpolate(dataset.interpolation || axis.interpolation || me.interpolation || 'linear');
+                getterX = me.getXgetter(dataset);
+                line.x(function(d){
+                  return xAxis._scale(getterX(d));
+                });
+                getterY = me.getYgetter(dataset);
+                line.y(function(d){
+                  return axis._scale(getterY(d));
+                });
+                line.defined(function(d) {
+                  return !isNaN(getterY(d)) && !isNaN(getterX(d));
+                });
+                lines.push(line);
+              }
+            });
+          }
 
           //settle axes orientation and ticks
           var axisOrientation, orientations = ['bottom', 'left', 'right'];
@@ -484,7 +482,7 @@ For more advanced configuration examples please look into demo source.
           if(yAxis.label){
             labels.append('text').attr('transform', 'rotate(90)').attr('y', 0).attr('x', margin.top + height/2).attr('dy', '-1em').style('text-anchor', 'middle').text(yAxis.label);
           }
-          if(y1Axis.label){
+          if(y1Axis && y1Axis.label){
             labels.append('text').attr('transform', 'rotate(-90)').attr('y', width + margin.right + margin.left).attr('x', margin.top - height/2).attr('dy', '-1em').style('text-anchor', 'middle').text(y1Axis.label);
           }
 
@@ -499,7 +497,7 @@ For more advanced configuration examples please look into demo source.
             .append('rect')
             .attr('width', width)
             //height & translate manipulation for proper display
-            .attr('height', height + 4)
+            .attr('height', height + 2)
             .attr('transform', 'translate(0 ,-2)');
 
           //create redraw function
@@ -514,7 +512,7 @@ For more advanced configuration examples please look into demo source.
                   axis._scale.domain(axis.domain);
                 }else{
                   //set y domain for all data in axis
-                  domain = d3.extent(me.getYs(axis.name));
+                  domain = (dataPresent) ? d3.extent(me.getYs(axis.name)) : [0, 1];
                   if(nice){
                     epsilon = (domain[1] - domain[0]) * 0.02;
                     domain = [domain[0] - epsilon, domain[1] + epsilon];
@@ -527,7 +525,7 @@ For more advanced configuration examples please look into demo source.
               }else{
                 //set predefined x domain or cover all x
                 domain = me.domain || axis.domain;
-                domain = (domain) ? domain : d3.extent(me.getXs());
+                domain = (domain) ? domain : (dataPresent) ? d3.extent(me.getXs()) : [0, 1];
                 axis._scale.domain(domain);
               }
             });
@@ -567,6 +565,11 @@ For more advanced configuration examples please look into demo source.
             }
           }
 
+          //set flag if prepared
+          if(dataPresent){
+            me.prepared = true;
+          }
+
           //return svg
           return svg.node();
         },
@@ -583,6 +586,15 @@ For more advanced configuration examples please look into demo source.
         //proxy for prepare
         refresh: function(){
           this.prepare();
+        },
+
+        //checker for redraw
+        checkAndRedraw: function(){
+          if(this.prepared){
+            this.redraw();
+          }else{
+            this.prepare();
+          }
         },
 
         //helpers
@@ -612,10 +624,11 @@ For more advanced configuration examples please look into demo source.
         },
 
         getYgetter: function(dataset){
-          var me = this;
+          var me = this, sample;
           if(!me.data || !me.data.length){
             throw Error('Can\'t sample records, no data');
           }
+          sample = me.data[0];
           if(typeof(dataset.y) === 'function'){
             return function(d){
               return dataset.y(d);
