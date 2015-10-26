@@ -19,12 +19,6 @@ gulp.task('jshint', function(){
         .pipe($.jshint.reporter('fail'));
 });
 
-// Copy all files at the root level (app)
-//gulp.task('copy', function(){
-//    return gulp.src(['*.html', '*.js', '!gulpfile.js'])
-//        .pipe(gulp.dest('es5')).pipe($.size({title: 'copy'}));
-//});
-
 // Transpile all JS to ES5.
 gulp.task('js', function () {
     return gulp.src(['*.{js,html}', '!gulpfile.js'])
@@ -43,6 +37,11 @@ gulp.task('clean', function(cb){
 
 // Build production files, the default task
 gulp.task('default', ['clean'], function(cb){
+    runSequence('jshint', 'js', 'wct:local', cb);
+});
+
+// Build production files without testing
+gulp.task('build', ['clean'], function(cb){
     runSequence('jshint', 'js', cb);
 });
 
