@@ -32,11 +32,11 @@
     "web-component-tester": "*",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
-  "_release": "5b3aaffc53",
+  "_release": "f38e67f7d2",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "5b3aaffc53520351d0e3f2b896d2bed5a345ebfc"
+    "commit": "f38e67f7d20ad2fea437fcd4f72f0cbd82c3a2a6"
   },
   "_source": "git://github.com/Junikorn/js-behaviors.git",
   "_target": "master",
